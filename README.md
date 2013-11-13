@@ -20,7 +20,7 @@ if desired.
 * [Ivy](http://ant.apache.org/ivy/) dependency manager.
 
 ## Usage Examples
-Can be found under /example/Example.java
+Can be found under [Example.java]( https://github.com/CloudBroker/cbp-java-api/blob/master/example/Example.java )
 
 ## Contributions
 
