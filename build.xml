@@ -1,0 +1,80 @@
+<project xmlns:ivy="antlib:org.apache.ivy.ant" default="create_zip" name="pack-api">
+	
+	<description>
+		Create zip file with all resources for the CloudBroker Platform Java API
+	</description>
+
+    <property name="src.dir" location="src"/>
+    <property name="lib.dir" location="lib"/>
+    <property name="test.dir" location="example"/>
+    <property name="build.dir" location="build"/>
+    <property name="doc.dir" location="doc"/>
+    <property name="dist.dir" location="dist"/>
+    <property name="api.name" value="CloudbrokerAPI"/>
+    <property name="api.version" value="1.2.0a"/>
+    <property name="api.jar" value="${api.name}-${api.version}.jar"/>
+    <property name="api.zip" value="${api.name}-${api.version}.zip"/>
+
+    <path id="api_classpath">
+      <fileset dir="${lib.dir}">
+        <include name="**/*.jar"/>
+      </fileset>
+    </path>
+
+    <target name="compile" depends="clean">
+    	<ivy:cleancache />
+    	<ivy:retrieve />
+    	<mkdir dir="${build.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="false">
+            <classpath refid="api_classpath"/>
+        </javac>
+    </target>
+
+    <target name="create_jar" depends="compile">
+        <mkdir dir="${dist.dir}"/>
+        <pathconvert refid="api_classpath" property="jar.classpath" pathsep=" " dirsep="/">
+            <map from="${lib.dir}" to="lib"/>
+        </pathconvert>
+        <jar destfile="${dist.dir}/${api.jar}">
+            <fileset dir="${build.dir}"/>
+            <manifest>
+                <attribute name="Main-Class" value="com.cloudbroker.platform.api.core.Core"/>
+                <attribute name="Class-Path" value="${jar.classpath}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="create_doc">
+        <mkdir dir="${doc.dir}"/>
+        <javadoc sourcepath="${src.dir}"
+        		packagenames = "com.cloudbroker.platform.api.data"
+        		sourcefiles = "${src.dir}/com/cloudbroker/platform/api/core/CloudbrokerClient.java"
+                destdir="${doc.dir}"
+                author="true"
+                version="true"
+                use="true"
+                windowtitle="CloudBroker Platform Java API">
+            <classpath refid="api_classpath"/>
+            <doctitle><![CDATA[<h1>CloudBroker Platform Java API</h1>]]></doctitle>
+            <bottom><![CDATA[<i>&copy; Copyright 2011-2013, CloudBroker GmbH. All Rights Reserved.</i>]]></bottom>
+        </javadoc>
+    </target>
+
+    <target name="create_zip" depends="create_jar,create_doc">
+        <zip destfile="${dist.dir}/${api.zip}">
+            <fileset dir="${dist.dir}" includes="${api.jar}"/>
+            <zipfileset dir="${lib.dir}" prefix="lib"/>
+            <zipfileset dir="${test.dir}" prefix="example"/>
+            <zipfileset dir="${doc.dir}" prefix="doc"/>
+        </zip>
+    </target>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${doc.dir}"/>
+        <delete includeemptydirs="true">
+            <fileset dir="${dist.dir}" excludes="${api.name}-*.jar,${api.name}-*.zip"/>
+        </delete>
+    </target>
+
+</project>
