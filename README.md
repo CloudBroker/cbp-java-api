@@ -34,7 +34,7 @@ CloudBroker welcomes rational contributions as well as bug/issue reports from ev
   Project management
 * Wibke Sudholt <<wibke.sudholt@cloudbroker.com>>:
   Project management
-* Andrey Sereda <<andrey.sereda@cloudbroker.com>>: 
+* Andrey Sereda <<andrey.sereda@scaletools.com>>: 
   Lead developer, maintainer
 * Maxim Malgin <<svkmax@gmail.com>>:
   Contribution in Tags, Fees and Costs management
