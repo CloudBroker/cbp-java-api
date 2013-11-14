@@ -35,7 +35,7 @@ CloudBroker welcomes rational contributions as well as bug/issue reports from ev
   Project management
 * Andrey Sereda <<andrey.sereda@cloudbroker.com>>  
   Lead developer, maintainer
-* Maxim Malgin <<svkmaxik@gmail.com>>  
+* Maxim Malgin <<svkmax@gmail.com>>  
   Contribution in Tags, Fees and Costs management
 * Arthur Karganyan <<artur.karganyan@scaletools.com>>  
   Contribution in code cleanup and optimization
