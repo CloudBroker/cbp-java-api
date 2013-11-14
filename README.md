@@ -1,10 +1,9 @@
-# CloudBroker Java API
+# CloudBroker Platform Java Client API Library
 
-The CloudBroker Java API can be used to access CloudBroker Platform programmatically.
-The CloudBroker Java API provides a corresponding 
-data model as well as methods to request most frequently used Platform operations.
+The CloudBroker Platform Java client API library can be used to access the CloudBroker Platform programmatically.
+It provides a corresponding data model as well as methods to request most frequently used platform operations.
 
-## About CloudBroker
+## About the CloudBroker Platform
 
 The CloudBroker Platform is a web-based application store for the deployment and execution
 of compute-intensive scientific and technical software in the cloud. It is provided as a cloud
