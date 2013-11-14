@@ -55,4 +55,4 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-A copy of the license is available in the repository's [license.txt]( https://github.com/CloudBroker/cbp-java-api/blob/master/license.txt ) file.
+A copy of the license is available in the repository's [LICENSE.txt]( https://github.com/CloudBroker/cbp-java-api/blob/master/LICENSE.txt ) file.
