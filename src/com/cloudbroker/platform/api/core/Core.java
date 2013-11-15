@@ -30,13 +30,21 @@ import java.io.StringReader;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.codec.binary.Base64;
 import org.w3c.dom.CharacterData;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -150,7 +158,13 @@ public class Core {
 			dir.mkdirs();
 		}
 		String pathToFile = pathToFolder + "/" + dataFile.getDataFileName();
-		downloadFile(linkToFile, pathToFile);
+		URL url = new URL(linkToFile);
+		String authorizationString = "";
+		// We add authorization if the link is the same as the platform
+		if (httpMethodExecutor.getHost().equals(url.getHost())) {
+			authorizationString = getAuthorizationHeader(httpMethodExecutor.getUsername(), httpMethodExecutor.getPassword());
+		}
+		downloadFile(url, pathToFile, authorizationString);
 		dataFile.setPathToFile(pathToFile);
 	}
 
@@ -262,30 +276,55 @@ public class Core {
 				+ "/restart.xml", 201);
 	}
 
-	private static void downloadFile(String from, String to) throws IOException {
+	private static void downloadFile(URL url, String to, String authorizationString) throws IOException {
 		OutputStream outStream = null;
 		URLConnection uCon = null;
 
 		InputStream is = null;
 		try {
-			URL Url;
+			TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+	            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+	                return null;
+	            }
+	            public void checkClientTrusted(X509Certificate[] certs, String authType) {
+	            }
+	            public void checkServerTrusted(X509Certificate[] certs, String authType) {
+	            }
+	        } };
+	        final SSLContext sc = SSLContext.getInstance("SSL");
+	        sc.init(null, trustAllCerts, new java.security.SecureRandom());
+	        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+	        HostnameVerifier allHostsValid = new HostnameVerifier() {
+				@Override
+	            public boolean verify(String hostname, SSLSession session) {
+	                return true;
+	            }
+	        };
+	        HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+			
 			byte[] buf;
 			int byteRead = 0;
-			Url = new URL(from);
 			outStream = new BufferedOutputStream(new FileOutputStream(to));
 
-			uCon = Url.openConnection();
+			uCon = url.openConnection();
+			if (authorizationString != null && ! authorizationString.isEmpty()) {
+				uCon.setRequestProperty("Authorization", authorizationString);
+			}
 			is = uCon.getInputStream();
 			buf = new byte[1024];
 			while ((byteRead = is.read(buf)) != -1) {
 				outStream.write(buf, 0, byteRead);
 			}
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 			throw new CloudbrokerPlatformAPIException(e.getMessage());
 		} finally {
 			try {
-				is.close();
-				outStream.close();
+				if(is != null) {
+					is.close();
+					outStream.close();
+				}
 			} catch (IOException e) {
 				throw new CloudbrokerPlatformAPIException(e.getMessage());
 			}
@@ -477,6 +516,11 @@ public class Core {
 		} catch (Exception e) {
 			throw new CloudbrokerPlatformAPIException(e.getMessage());
 		}
+	}
+	
+	private static String getAuthorizationHeader(String username, String password) {
+		String userpass = username + ":" + password;
+		return "Basic " + new String(new Base64().encode(userpass.getBytes()));
 	}
 
 }
