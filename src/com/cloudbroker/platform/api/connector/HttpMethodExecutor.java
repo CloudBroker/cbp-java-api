@@ -82,10 +82,30 @@ public class HttpMethodExecutor {
 	private DefaultHttpClient httpClient;
 	private HttpHost targetHost;
 	private BasicHttpContext localcontext;
+	
+	private String username = "";
+	private String password = "";
+	private String host = "";
+	
+	public String getUsername() {
+		return username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public String getHost() {
+		return host;
+	}
 
 	@SuppressWarnings("deprecation")
 	public HttpMethodExecutor(String username, String password, String host,
 			int port) throws NoSuchAlgorithmException, KeyManagementException {
+		this.username = username;
+		this.password = password;
+		this.host = host;
+		
 		UsernamePasswordCredentials myCredentials = null;
 		if (username != null && !username.isEmpty()) {
 			myCredentials = new UsernamePasswordCredentials(username, password);
