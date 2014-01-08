@@ -811,6 +811,23 @@ public class CloudbrokerClient {
 	public void submitJob(Job job) throws IOException {
 		Core.submitJob(job, getHttpMethodExecutor());
 	}
+	
+	/**
+	 * Requests file loading, applicable to a running job only. Files are loaded asynchronously, please check Job#lastLoadFiles field to see when files were loaded
+	 *
+	 * 
+	 * @param job
+	 *            - job which files should be loaded
+	 * @param mask
+	 * 			  - defines which files to be loaded (e.g. '*.log', 'job.*' etc)             
+	 * @throws IOException
+	 */
+	public void loadJobFiles(Job job, String mask) throws IOException {
+		if(mask == null || mask.trim().isEmpty()) {
+			mask = "*";
+		}
+		Core.loadJobFiles(job, mask, getHttpMethodExecutor());
+	}
 
 	/**
 	 * Stops the given job in the cloud

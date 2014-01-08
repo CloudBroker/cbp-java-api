@@ -508,6 +508,11 @@ public class Core {
 			return "Unknown";
 		}
 	}
+	
+	public static void loadJobFiles(Job job, String mask, HttpMethodExecutor httpMethodExecutor) throws IOException {
+		httpMethodExecutor.put("<file_mask>" + mask + "</file_mask>", getUrl(Job.class) + "/" + job.getID()
+				+ "/load_files.xml", 200);
+	}
 
 	private static <T extends Base> String getUrl(Class<T> T) {
 		try {
