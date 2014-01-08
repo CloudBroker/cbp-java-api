@@ -20,6 +20,8 @@
 
 package com.cloudbroker.platform.api.data;
 
+import java.util.Date;
+
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 public class Job extends Base{
@@ -114,6 +116,9 @@ public class Job extends Base{
 	@XStreamAlias("storage-id")
 	private String storageID = "";
 	
+	@XStreamAlias("last-load-files")
+	private Date lastLoadFiles;
+	
 	@XStreamAlias("tag")
 	private Tag tag = new Tag();
 	
@@ -123,6 +128,10 @@ public class Job extends Base{
 
 	public void setJobOutcome(String jobOutcome) {
 		this.jobOutcome = jobOutcome;
+	}
+	
+	public Date getLastLoadFiles() {
+		return lastLoadFiles;
 	}
 
 	public String getAccessID() {

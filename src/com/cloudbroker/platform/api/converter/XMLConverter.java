@@ -87,6 +87,8 @@ public class XMLConverter {
 		};
 		xstream.alias(T.getSimpleName().toLowerCase(), T);
 		xstream.processAnnotations(T);
+		String[] acceptableFormats = {"HH:mm:ss"};
+		xstream.registerConverter(new CBDateConverter("yyyy-MM-dd'T'HH:mm:ss'Z'", acceptableFormats));
 		return xstream;
 	}
 }
