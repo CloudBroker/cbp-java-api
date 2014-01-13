@@ -55,6 +55,12 @@ public class DataFile extends Base {
 
 	@XStreamAlias("data-updated-at")
 	private String dataUpdatedAt = "";
+	
+	private boolean uploaded = false;
+	
+	public boolean isUploaded() {
+		return uploaded;
+	}
 
 	public String getScpFilename() {
 		return scpFilename;
