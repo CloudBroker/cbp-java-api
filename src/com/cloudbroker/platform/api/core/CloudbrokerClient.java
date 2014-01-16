@@ -29,6 +29,7 @@ import com.cloudbroker.platform.api.connector.HttpMethodExecutor;
 import com.cloudbroker.platform.api.data.ActivityLog;
 import com.cloudbroker.platform.api.data.Base;
 import com.cloudbroker.platform.api.data.BillingItem;
+import com.cloudbroker.platform.api.data.CopyType;
 import com.cloudbroker.platform.api.data.DataFile;
 import com.cloudbroker.platform.api.data.DataType;
 import com.cloudbroker.platform.api.data.Executable;
@@ -854,14 +855,27 @@ public class CloudbrokerClient {
 	}
 
 	/**
-	 * Copies the given job in the cloud
+	 * Copies the given job on the platform. Includes copying of all job datafiles.
 	 * 
 	 * @param job
 	 *            - job to to be copied
+	 * @param newName - name of a new job
 	 * @throws IOException
 	 */
 	public Job copyJob(Job job, String newName) throws IOException {
-		return Core.copyJob(job, newName, getHttpMethodExecutor());
+		return copyJob(job, newName, CopyType.ALL);
+	}
+
+	/**
+	 * Copies the given job on the platform. 
+	 * @param job - job to be copied
+	 * @param newName - name of a new job
+	 * @param copyType - defines how to copy datafiles. All - all datafiles will be copied, INPUT - only input datafiles will be loaded, NONE - no datafiles copying is needed
+	 * @return
+	 * @throws IOException
+	 */
+	public Job copyJob(Job job, String newName, CopyType copyType) throws IOException {
+		return Core.copyJob(job, newName, copyType, getHttpMethodExecutor());
 	}
 
 	/**

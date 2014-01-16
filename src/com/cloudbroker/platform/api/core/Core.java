@@ -56,6 +56,7 @@ import com.cloudbroker.platform.api.connector.HttpMethodExecutor;
 import com.cloudbroker.platform.api.converter.XMLConverter;
 import com.cloudbroker.platform.api.data.ActivityLog;
 import com.cloudbroker.platform.api.data.Base;
+import com.cloudbroker.platform.api.data.CopyType;
 import com.cloudbroker.platform.api.data.DataFile;
 import com.cloudbroker.platform.api.data.DataType;
 import com.cloudbroker.platform.api.data.Executable;
@@ -331,12 +332,14 @@ public class Core {
 		}
 	}
 
-	public static Job copyJob(Job job, String newName,
+	public static Job copyJob(Job job, String newName, CopyType copyType,
 			HttpMethodExecutor httpMethodExecutor) throws IOException {
 		String xml = httpMethodExecutor
 				.put("<copy_params><new_job_name>"
 						+ newName
-						+ "</new_job_name><reuse_input>true</reuse_input></copy_params>",
+						+ "</new_job_name><data_files_copy>"
+						+ copyType.toString()
+						+ "</data_files_copy></copy_params>",
 						getUrl(job.getClass()) + "/" + job.getID()
 								+ "/copy.xml", 201);
 		return XMLConverter.deserialize(Job.class, xml);
