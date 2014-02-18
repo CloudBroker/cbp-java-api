@@ -119,9 +119,31 @@ public class Job extends Base{
 	@XStreamAlias("last-load-files")
 	private Date lastLoadFiles;
 	
+	@XStreamAlias("permanently-running")
+	private boolean permanentlyRunning = false;
+
+	@XStreamAlias("no-execution")
+	private boolean noExecution = false;
+	
 	@XStreamAlias("tag")
 	private Tag tag = new Tag();
 	
+	public boolean isPermanentlyRunning() {
+		return permanentlyRunning;
+	}
+
+	public void setPermanentlyRunning(boolean permanentlyRunning) {
+		this.permanentlyRunning = permanentlyRunning;
+	}
+
+	public boolean isNoExecution() {
+		return noExecution;
+	}
+
+	public void setNoExecution(boolean noExecution) {
+		this.noExecution = noExecution;
+	}
+
 	public String getJobOutcome() {
 		return jobOutcome;
 	}
