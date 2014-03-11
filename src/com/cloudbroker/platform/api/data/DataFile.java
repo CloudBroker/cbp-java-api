@@ -41,6 +41,7 @@ public class DataFile extends Base {
 	private String dataFileSize;
 
 	private String pathToFile = "";
+	private String path = "";
 	private String description = "";
 	private boolean archive;
 
@@ -58,6 +59,14 @@ public class DataFile extends Base {
 	
 	private boolean uploaded = false;
 	
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
 	public boolean isUploaded() {
 		return uploaded;
 	}
@@ -153,6 +162,7 @@ public class DataFile extends Base {
 		hash.put("archive", isArchive() ? "true" : "false");
 		hash.put("data_type_id", getDataTypeID());
 		hash.put("description", getDescription());
+		hash.put("path", getPath());
 		return hash;
 	}
 }

@@ -153,6 +153,8 @@ public class Core {
 		String linkToFile = httpMethodExecutor.put("",
 				getUrl(dataFile.getClass()) + "/" + dataFile.getID()
 						+ "/download.xml", 200);
+		// Path to folder with file path
+		pathToFolder = pathToFolder + "/" + dataFile.getPath();
 		// Create folder if not exists
 		File dir = new File(pathToFolder);
 		if (!dir.exists()) {
@@ -163,7 +165,9 @@ public class Core {
 		String authorizationString = "";
 		// We add authorization if the link is the same as the platform
 		if (httpMethodExecutor.getHost().equals(url.getHost())) {
-			authorizationString = getAuthorizationHeader(httpMethodExecutor.getUsername(), httpMethodExecutor.getPassword());
+			authorizationString = getAuthorizationHeader(
+					httpMethodExecutor.getUsername(),
+					httpMethodExecutor.getPassword());
 		}
 		downloadFile(url, pathToFile, authorizationString);
 		dataFile.setPathToFile(pathToFile);
@@ -220,23 +224,52 @@ public class Core {
 				stdinDataType = dataType;
 			}
 		}
+		// for further correct definition of stdin file
+		if(! stdinFileName.startsWith("/")) {
+			stdinFileName = "/" + stdinFileName; 
+		}
 		// Data files creation
-		File dir = new File(pathToDataFilesDirectory);
+		saveFilesFromFolder(pathToDataFilesDirectory, "", inputCompressed,
+				stdinFileName, stdinDataType, inputDataType, job,
+				httpMethodExecutor);
+
+		// Submitting a job if not a pipeline
+		if (previousJob == null) {
+			submitJob(job, httpMethodExecutor);
+		}
+		return job;
+	}
+
+	/**
+	 * Recursive data files adding method
+	 * 
+	 * @throws IOException
+	 */
+	private static void saveFilesFromFolder(String absolutePath,
+			String relativePath, boolean inputCompressed, String stdinFileName,
+			DataType stdinDataType, DataType inputDataType, Job job,
+			HttpMethodExecutor httpMethodExecutor) throws IOException {
+		File dir = new File(absolutePath + relativePath);
 		String[] children = dir.list();
 		if (children == null) {
-			throw new IOException(
-					"Either dir does not exist or is not a directory");
+			return;
 		} else {
 			for (int i = 0; i < children.length; i++) {
 				// Get filename of file or directory
-				String filename = pathToDataFilesDirectory + "/" + children[i];
+				String filename = absolutePath + relativePath + "/"
+						+ children[i];
 				if (new File(filename).isDirectory()) {
-					continue;
+					saveFilesFromFolder(absolutePath, relativePath + "/"
+							+ children[i], inputCompressed, stdinFileName,
+							stdinDataType, inputDataType, job,
+							httpMethodExecutor);
+					return;
 				}
 				DataFile dataFile = new DataFile();
 				dataFile.setPathToFile(filename);
+				dataFile.setPath(relativePath);
 				dataFile.setArchive(inputCompressed);
-				if (stdinFileName.equals(children[i])) {
+				if (stdinFileName.equals(relativePath + "/" + children[i])) {
 					dataFile.setDataType(stdinDataType);
 				} else {
 					dataFile.setDataType(inputDataType);
@@ -246,11 +279,6 @@ public class Core {
 				create(dataFile, httpMethodExecutor);
 			}
 		}
-		// Submitting a job if not a pipeline
-		if (previousJob == null) {
-			submitJob(job, httpMethodExecutor);
-		}
-		return job;
 	}
 
 	public static void submitJob(Job job, HttpMethodExecutor httpMethodExecutor)
@@ -277,38 +305,44 @@ public class Core {
 				+ "/restart.xml", 201);
 	}
 
-	private static void downloadFile(URL url, String to, String authorizationString) throws IOException {
+	private static void downloadFile(URL url, String to,
+			String authorizationString) throws IOException {
 		OutputStream outStream = null;
 		URLConnection uCon = null;
 
 		InputStream is = null;
 		try {
 			TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-	            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-	                return null;
-	            }
-	            public void checkClientTrusted(X509Certificate[] certs, String authType) {
-	            }
-	            public void checkServerTrusted(X509Certificate[] certs, String authType) {
-	            }
-	        } };
-	        final SSLContext sc = SSLContext.getInstance("SSL");
-	        sc.init(null, trustAllCerts, new java.security.SecureRandom());
-	        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-	        HostnameVerifier allHostsValid = new HostnameVerifier() {
+				public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+					return null;
+				}
+
+				public void checkClientTrusted(X509Certificate[] certs,
+						String authType) {
+				}
+
+				public void checkServerTrusted(X509Certificate[] certs,
+						String authType) {
+				}
+			} };
+			final SSLContext sc = SSLContext.getInstance("SSL");
+			sc.init(null, trustAllCerts, new java.security.SecureRandom());
+			HttpsURLConnection
+					.setDefaultSSLSocketFactory(sc.getSocketFactory());
+			HostnameVerifier allHostsValid = new HostnameVerifier() {
 				@Override
-	            public boolean verify(String hostname, SSLSession session) {
-	                return true;
-	            }
-	        };
-	        HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
-			
+				public boolean verify(String hostname, SSLSession session) {
+					return true;
+				}
+			};
+			HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+
 			byte[] buf;
 			int byteRead = 0;
 			outStream = new BufferedOutputStream(new FileOutputStream(to));
 
 			uCon = url.openConnection();
-			if (authorizationString != null && ! authorizationString.isEmpty()) {
+			if (authorizationString != null && !authorizationString.isEmpty()) {
 				uCon.setRequestProperty("Authorization", authorizationString);
 			}
 			is = uCon.getInputStream();
@@ -322,7 +356,7 @@ public class Core {
 			throw new CloudbrokerPlatformAPIException(e.getMessage());
 		} finally {
 			try {
-				if(is != null) {
+				if (is != null) {
 					is.close();
 					outStream.close();
 				}
@@ -334,14 +368,12 @@ public class Core {
 
 	public static Job copyJob(Job job, String newName, CopyType copyType,
 			HttpMethodExecutor httpMethodExecutor) throws IOException {
-		String xml = httpMethodExecutor
-				.put("<copy_params><new_job_name>"
-						+ newName
+		String xml = httpMethodExecutor.put(
+				"<copy_params><new_job_name>" + newName
 						+ "</new_job_name><data_files_copy>"
 						+ copyType.toString()
 						+ "</data_files_copy></copy_params>",
-						getUrl(job.getClass()) + "/" + job.getID()
-								+ "/copy.xml", 201);
+				getUrl(job.getClass()) + "/" + job.getID() + "/copy.xml", 201);
 		return XMLConverter.deserialize(Job.class, xml);
 	}
 
@@ -511,10 +543,11 @@ public class Core {
 			return "Unknown";
 		}
 	}
-	
-	public static void loadJobFiles(Job job, String mask, HttpMethodExecutor httpMethodExecutor) throws IOException {
-		httpMethodExecutor.put("<file_mask>" + mask + "</file_mask>", getUrl(Job.class) + "/" + job.getID()
-				+ "/load_files.xml", 200);
+
+	public static void loadJobFiles(Job job, String mask,
+			HttpMethodExecutor httpMethodExecutor) throws IOException {
+		httpMethodExecutor.put("<file_mask>" + mask + "</file_mask>",
+				getUrl(Job.class) + "/" + job.getID() + "/load_files.xml", 200);
 	}
 
 	private static <T extends Base> String getUrl(Class<T> T) {
@@ -525,8 +558,9 @@ public class Core {
 			throw new CloudbrokerPlatformAPIException(e.getMessage());
 		}
 	}
-	
-	private static String getAuthorizationHeader(String username, String password) {
+
+	private static String getAuthorizationHeader(String username,
+			String password) {
 		String userpass = username + ":" + password;
 		return "Basic " + new String(new Base64().encode(userpass.getBytes()));
 	}
