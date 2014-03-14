@@ -1201,4 +1201,15 @@ public class CloudbrokerClient {
 			ClassNotFoundException {
 		return Core.getJobStatusTimes(job.getID(), getHttpMethodExecutor());
 	}
+	
+	/**
+	 * Downloads billing data containing all objects of class T and their costs in CSV format. Supported models: Job, DataFile, Deployment
+	 * @param T model to be listed
+	 * @param pathToFile path on the local machine where the file should be stored
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	public <T extends Base> void downloadCSVBillingData(Class<T> T, String pathToFile) throws IOException, ClassNotFoundException {
+		Core.downloadCSVBillingData(T, pathToFile, getHttpMethodExecutor());
+	}
 }

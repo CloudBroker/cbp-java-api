@@ -173,6 +173,19 @@ public class Core {
 		dataFile.setPathToFile(pathToFile);
 	}
 
+	public static <T extends Base> void downloadCSVBillingData(Class<T> T, String pathToFile,
+			HttpMethodExecutor httpMethodExecutor)
+			throws IOException, ClassNotFoundException {
+		File baseFolder = new File(pathToFile).getParentFile();
+		if(! baseFolder.exists() && ! baseFolder.mkdirs()){
+		    throw new IOException("Couldn't create folder " + baseFolder);
+		}		
+		String authorizationString = getAuthorizationHeader(
+				httpMethodExecutor.getUsername(),
+				httpMethodExecutor.getPassword());
+		downloadFile(new URL("https://" + httpMethodExecutor.getHost() + getUrl(T) + "/0/csv"), pathToFile, authorizationString);
+	}
+
 	public static boolean delete(Base model,
 			HttpMethodExecutor httpMethodExecutor) throws IOException {
 		return httpMethodExecutor.delete(getUrl(model.getClass()) + "/"
