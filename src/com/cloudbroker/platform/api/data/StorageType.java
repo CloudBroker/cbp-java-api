@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  * For additional information please contact us via the following email
- * platform@cloudbroker.com
+ * support@cloudbroker.com
  *
  */
 
