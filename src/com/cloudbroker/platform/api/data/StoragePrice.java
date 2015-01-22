@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 CloudBroker GmbH, Zurich, Switzerland
+ * Copyright 2015 CloudBroker GmbH, Zurich, Switzerland
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 
 package com.cloudbroker.platform.api.data;
 
+import com.cloudbroker.platform.api.exceptions.CloudbrokerPlatformAPIException;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 @XStreamAlias("storage-price")
@@ -28,103 +29,25 @@ public class StoragePrice extends Base{
 	@XStreamAlias("storage-id")
 	private String storageID = "";
 
-	@XStreamAlias("cloud-data-in-fee")
-	private double cloudDataInFee;
-	
-	@XStreamAlias("cloud-data-out-fee")
-	private double cloudDataOutFee;
+	@XStreamAlias("storage-data-out-fee")
+	private double storageDataOutFee;
 
-	@XStreamAlias("cloud-storage-fee")
-	private double cloudStorageFee;
-	
-	@XStreamAlias("compute-data-in-fee")
-	private double computeDataInFee;
-	
-	@XStreamAlias("compute-data-out-fee")
-	private double computeDataOutFee;
-	
-	@XStreamAlias("persistent-data-out-fee")
-	private double persistentDataOutFee;
-	
-	@XStreamAlias("persistent-data-in-fee")
-	private double persistentDataInFee;
-	
 	@XStreamAlias("persistent-storage-fee")
 	private double persistentStorageFee;
-	
-	@XStreamAlias("persistent-requests-fee")
-	private double persistentRequestsFee;
-	
+
 	public String getStorageID() {
 		return storageID;
 	}
-	
-	public String getStorageId() {
-		return getStorageID();
+
+	public double getStorageDataOutFee() {
+		return storageDataOutFee;
 	}
 
-	public void setStorageID(String storageID) {
-		this.storageID = storageID;
-	}
-	
-	public void setStorageId(String storageId) {
-		setStorageID(storageID);
-	}
-
-	public double getCloudDataInFee() {
-		return cloudDataInFee;
-	}
-	
-	public double getCloudStorageFee() {
-		return cloudStorageFee;
-	}
-
-	public double getCloudDataOutFee() {
-		return cloudDataOutFee;
-	}
-	
-	public double getComputeDataInFee() {
-		return computeDataInFee;
-	}
-
-	public double getComputeDataOutFee() {
-		return computeDataOutFee;
-	}
-	
-	public void setPersistentDataInFee(double persistentDataInFee){
-		this.persistentDataInFee = persistentDataInFee;
-	}
-	
-	public double getPersistentDataInFee(){
-		return persistentDataInFee;
-	}
-	
-	public void setPersistentDataOutFee(double persistentDataOutFee){
-		this.persistentDataOutFee = persistentDataOutFee;
-	}
-	
-	public double getPersistentDataOutFee(){
-		return persistentDataOutFee;
-	}
-	
-	public void setPersistentStorageFee(double persistentStorageFee) {
-		this.persistentStorageFee = persistentStorageFee;
-	}
-	
 	public double getPersistentStorageFee() {
 		return persistentStorageFee;
 	}
-	
-	public void setPersistentRequestsFee(double persistentRequestsFee) {
-		this.persistentRequestsFee = persistentRequestsFee;
-	}
-	
-	public double getPersistentRequestsFee(){
-		return persistentRequestsFee;
-	}
 
 	public static String getURL() {
-		return "/storage_prices";
+		throw new CloudbrokerPlatformAPIException("Can not list storage prices. Please use CloudbrokerClient#getStoragePrice(String storageID) to get price");
 	}
-
 }

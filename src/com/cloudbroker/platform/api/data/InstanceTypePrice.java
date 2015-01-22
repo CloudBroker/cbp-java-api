@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 CloudBroker GmbH, Zurich, Switzerland
+ * Copyright 2015 CloudBroker GmbH, Zurich, Switzerland
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 
 package com.cloudbroker.platform.api.data;
 
+import com.cloudbroker.platform.api.exceptions.CloudbrokerPlatformAPIException;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 @XStreamAlias("instance-type-price")
@@ -28,15 +29,6 @@ public class InstanceTypePrice extends Base{
 	@XStreamAlias("instance-type-id")
 	private String instanceTypeID = "";
 
-	@XStreamAlias("operating-system-id")
-	private String operatingSystemID = "";
-	
-	@XStreamAlias("resource-price-id")
-	private String resourcePriceID = "";
-	
-	@XStreamAlias("compute-runtime-fee")
-	private double computeRuntimeFee;
-	
 	@XStreamAlias("instance-runtime-fee")
 	private double instanceRuntimeFee;
 	
@@ -47,60 +39,12 @@ public class InstanceTypePrice extends Base{
 	public String getInstanceTypeId() {
 		return getInstanceTypeID();
 	}
-
-	public void setInstanceTypeID(String instanceTypeID) {
-		this.instanceTypeID = instanceTypeID;
-	}
-	
-	public void setInstanceTypeId(String instanceTypeId) {
-		setInstanceTypeID(instanceTypeId);
-	}
-
-	public String getOperatingSystemId() {
-		return getOperatingSystemID();
-	}
-	
-	public String getOperatingSystemID() {
-		return operatingSystemID;
-	}
-
-	public void setOperatingSystemID(String operatingSystemID) {
-		this.operatingSystemID = operatingSystemID;
-	}
-	
-	public void setOperatingSystemId(String operatingSystemId) {
-		setOperatingSystemID(operatingSystemId);
-	}
-
-	public String getResourcePriceID() {
-		return resourcePriceID;
-	}
-	
-	public String getResourcePriceId() {
-		return getResourcePriceID();
-	}
-
-	public void setResourcePriceId(String resourcePriceID) {
-		setResourcePriceID(resourcePriceID);
-	}
-	
-	public void setResourcePriceID(String resourcePriceID) {
-		this.resourcePriceID = resourcePriceID;
-	}
-
-	public double getComputeRuntimeFee() {
-		return computeRuntimeFee;
-	}
-	
-	public void setInstanceRuntimeFee(double instanceRuntimeFee) {
-		this.instanceRuntimeFee = instanceRuntimeFee;
-	}
 	
 	public double getInstanceRuntimeFee() {
 		return instanceRuntimeFee;
 	}
 
 	public static String getURL() {
-		return "/instance_type_prices";
+		throw new CloudbrokerPlatformAPIException("Can not list instance type prices. Please use CloudbrokerClient#getInstanceTypePrice(String instanceTypeID) to get price");
 	}
 }

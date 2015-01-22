@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 CloudBroker GmbH, Zurich, Switzerland
+ * Copyright 2015 CloudBroker GmbH, Zurich, Switzerland
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -117,6 +117,24 @@ public class CloudbrokerClient {
 	}
 
 	/**
+	 * Shortcut to get an instance of the CloudBroker Client
+	 * 
+	 * @param username
+	 *            - your email for CB
+	 * @param password
+	 *            - your password for CB
+	 * @param hostPrefix
+	 *            - address prefix of the platform to be used, e.g. platform.
+	 * @return Cloudbroker Client object
+	 * @throws org.apache.http.auth.AuthenticationException
+	 * @throws Exception
+	 */
+	public static CloudbrokerClient getInstance(String username,
+			String password, String hostPrefix) {
+		return new CloudbrokerClient(username, password, hostPrefix + ".cloudbroker.com", 443);
+	}
+
+	/**
 	 * Used to get an object by ID
 	 * 
 	 * @param model
@@ -214,10 +232,18 @@ public class CloudbrokerClient {
 	 * @return list of platform prices
 	 * @throws IOException
 	 * @throws ClassNotFoundException
+	 * 
+	 * @deprecated use getPlatformPrice() instead
 	 */
 	public List<PlatformPrice> listPlatformPrices() throws IOException,
 			ClassNotFoundException {
-		return list(PlatformPrice.class);
+		LinkedList<PlatformPrice> result = new LinkedList<PlatformPrice>();
+		result.add(getPlatformPrice());
+		return result;
+	}
+	
+	public PlatformPrice getPlatformPrice() throws IOException {
+		return Core.getPlatformPrice(getHttpMethodExecutor());
 	}
 
 	/**
@@ -226,10 +252,28 @@ public class CloudbrokerClient {
 	 * @return list of software prices
 	 * @throws IOException
 	 * @throws ClassNotFoundException
+	 * 
+	 * @deprecated use CloudbrokerClient#getSoftwarePrice(String softwareID) instead
 	 */
 	public List<SoftwarePrice> listSoftwarePrices() throws IOException,
 			ClassNotFoundException {
-		return list(SoftwarePrice.class);
+		return new LinkedList<SoftwarePrice>();
+	}
+	
+	public SoftwarePrice getSoftwarePrice(String softwareID) throws IOException {
+		return Core.getSoftwarePrice(softwareID, getHttpMethodExecutor());
+	}
+	
+	public StoragePrice getStoragePrice(String storageID) throws IOException {
+		return Core.getStoragePrice(storageID, getHttpMethodExecutor());
+	}
+	
+	public InstanceTypePrice getInstanceTypePrice(String instanceTypeID) throws IOException {
+		return Core.getInstanceTypePrice(instanceTypeID, getHttpMethodExecutor());
+	}
+	
+	public ResourcePrice getResourcePrice(String resourceID) throws IOException {
+		return Core.getResourcePrice(resourceID, getHttpMethodExecutor());
 	}
 
 	/**
@@ -238,10 +282,12 @@ public class CloudbrokerClient {
 	 * @return list of resource prices
 	 * @throws IOException
 	 * @throws ClassNotFoundException
+	 * 
+	 * @deprecated use CloudbrokerClient#getResourcePrice(String resourceID) instead
 	 */
 	public List<ResourcePrice> listResourcePrices() throws IOException,
 			ClassNotFoundException {
-		return list(ResourcePrice.class);
+		return new LinkedList<ResourcePrice>();
 	}
 
 	/**
@@ -250,10 +296,12 @@ public class CloudbrokerClient {
 	 * @return list of instance type prices
 	 * @throws IOException
 	 * @throws ClassNotFoundException
+	 * 
+	 * @deprecated use CloudbrokerClient#getInstanceTypePrice(String instanceTypeID) instead
 	 */
 	public List<InstanceTypePrice> listInstanceTypePrices() throws IOException,
 			ClassNotFoundException {
-		return list(InstanceTypePrice.class);
+		return new LinkedList<InstanceTypePrice>();
 	}
 
 	/**
@@ -389,10 +437,12 @@ public class CloudbrokerClient {
 	 * @return list of storage prices
 	 * @throws IOException
 	 * @throws ClassNotFoundException
+	 * 
+	 * @deprecated use CloudbrokerClient#getStoragePrice(String storageID) instead
 	 */
 	public List<StoragePrice> listStoragePrices() throws IOException,
 			ClassNotFoundException {
-		return list(StoragePrice.class);
+		return new LinkedList<StoragePrice>();
 	}
 
 	/**
@@ -658,28 +708,6 @@ public class CloudbrokerClient {
 	 * 
 	 * @param <T>
 	 *            - Model, that should extend Base
-	 * @param model
-	 *            - empty model, like new Job() or new DataFile() etc
-	 * @param name
-	 *            - name of model to be searched for
-	 * @return found model or null
-	 * @throws IOException
-	 * @throws ClassNotFoundException
-	 * 
-	 * @deprecated Use findByName(Class T, String name) instead
-	 */
-	@SuppressWarnings("unchecked")
-	@Deprecated
-	public <T extends Base> T findByName(T model, String name)
-			throws IOException, ClassNotFoundException {
-		return (T) findByName(model.getClass(), name);
-	}
-
-	/**
-	 * Searches a model by name
-	 * 
-	 * @param <T>
-	 *            - Model, that should extend Base
 	 * @param T
 	 *            - model class, e.g. DataFile.class
 	 * @param name
@@ -698,32 +726,6 @@ public class CloudbrokerClient {
 			}
 		}
 		return result;
-	}
-
-	/**
-	 * Searches a model by name and status
-	 * 
-	 * @param <T>
-	 *            - Model, that should extend Base
-	 * @param model
-	 *            - empty model, like new Job() or new DataFile() etc
-	 * @param name
-	 *            - name of model to be searched for
-	 * @param status
-	 *            - status of model to be searched for
-	 * @return found model or null
-	 * @throws IOException
-	 * @throws ClassNotFoundException
-	 * 
-	 * @deprecated Use findByNameAndStatus(Class T, String name, String status)
-	 *             instead
-	 */
-	@SuppressWarnings("unchecked")
-	@Deprecated
-	public <T extends Base> T findByNameAndStatus(T model, String name,
-			String status) throws IOException, Exception,
-			ClassNotFoundException {
-		return (T) findByNameAndStatus(model.getClass(), name, status);
 	}
 
 	/**
@@ -753,28 +755,6 @@ public class CloudbrokerClient {
 			}
 		}
 		return result;
-	}
-
-	/**
-	 * Searches an active model by name
-	 * 
-	 * @param <T>
-	 *            - Model, that should extend Base
-	 * @param model
-	 *            - empty model, like new Job() or new DataFile() etc
-	 * @param name
-	 *            - name of active model to be searched for
-	 * @return found model or null
-	 * @throws IOException
-	 * @throws ClassNotFoundException
-	 * 
-	 * @deprecated Use findByActiveName(Class T, String name)
-	 */
-	@SuppressWarnings("unchecked")
-	@Deprecated
-	public <T extends Base> T findByActiveName(T model, String name)
-			throws Exception {
-		return (T) findByActiveName(model.getClass(), name);
 	}
 
 	/**

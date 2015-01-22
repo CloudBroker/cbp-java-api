@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 CloudBroker GmbH, Zurich, Switzerland
+ * Copyright 2015 CloudBroker GmbH, Zurich, Switzerland
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,11 @@
 
 package com.cloudbroker.platform.api.data;
 
+import com.cloudbroker.platform.api.exceptions.CloudbrokerPlatformAPIException;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 @XStreamAlias("software-price")
 public class SoftwarePrice extends Base{
-	@XStreamAlias("organization-type-id")
-	private String organizationTypeID = "";
-	
 	@XStreamAlias("software-id")
 	private String softwareID = "";
 	
@@ -45,51 +43,11 @@ public class SoftwarePrice extends Base{
 	@XStreamAlias("license-job-fee")
 	private double licenseJobFee;
 	
-	@XStreamAlias("software-organization-fee")
-	private double softwareOrganizationFee;
+	@XStreamAlias("non-commercial-rebate")
+	private int nonCommercialRebate;
 	
-	@XStreamAlias("software-user-fee")
-	private double softwareUserFee;
-	
-	@XStreamAlias("software-job-fee")
-	private double softwareJobFee;
-	
-	@XStreamAlias("software-runtime-fee")
-	private double softwareRuntimeFee;
-	
-	@XStreamAlias("software-core-runtime-fee")
-	private double softwareCoreRuntimeFee;
-	
-	public String getOrganizationTypeID() {
-		return organizationTypeID;
-	}
-	
-	public String getOrganizationTypeId() {
-		return getOrganizationTypeID();
-	}
-
-	public void setOrganizationTypeID(String organizationTypeID) {
-		this.organizationTypeID = organizationTypeID;
-	}
-	
-	public void setOrganizationTypeId(String organizationTypeId) {
-		setOrganizationTypeID(organizationTypeId);
-	}
-
 	public String getSoftwareID() {
 		return softwareID;
-	}
-	
-	public String getSoftwareId() {
-		return getSoftwareID();
-	}
-
-	public void setSoftwareID(String softwareID) {
-		this.softwareID = softwareID;
-	}
-	
-	public void setSoftwareId(String softwareId) {
-		setSoftwareID(softwareId);
 	}
 
 	public double getLicenseOrganizationFee() {
@@ -111,49 +69,13 @@ public class SoftwarePrice extends Base{
 	public double getLicenseJobFee() {
 		return licenseJobFee;
 	}
-	
-	public void setSoftwareOrganizationFee(double softwareOrganizationFee) {
-		this.softwareOrganizationFee = softwareOrganizationFee;
-	}
-	
-	public double getSoftwareOrganizationFee() {
-		return softwareOrganizationFee;
-	}
-	
-	public void setSoftwareUserFee(double softwareUserFee) {
-		this.softwareUserFee = softwareUserFee;
-	}
-	
-	public double getSoftwareUserFee() {
-		return softwareUserFee;
-	}
-	
-	public void setSoftwareJobFee(double softwareJobFee) {
-		this.softwareJobFee = softwareJobFee;
-	}
-	
-	public double getSoftwareJobFee() {
-		return softwareJobFee;
-	}
-	
-	public void setSoftwareRuntimeFee(double softwareRuntimeFee) {
-		this.softwareRuntimeFee = softwareRuntimeFee;
-	}
-	
-	public double getSoftwareRuntimeFee() {
-		return softwareRuntimeFee;
-	}
-	
-	public void setSoftwareCoreRuntimeFee(double softwareCoreRuntimeFee) {
-		this.softwareCoreRuntimeFee = softwareCoreRuntimeFee;
-	}
-	
-	public double getSoftwareCoreRuntimeFee() {
-		return softwareCoreRuntimeFee;
+
+	public int getNonCommercialRebate() {
+		return nonCommercialRebate;
 	}
 
 	public static String getURL() {
-		return "/software_prices";
+		throw new CloudbrokerPlatformAPIException("Can not list software prices. Please use CloudbrokerClient#getSoftwarePrice(String softwareID) to get price");
 	}
 
 }

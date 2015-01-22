@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 CloudBroker GmbH, Zurich, Switzerland
+ * Copyright 2015 CloudBroker GmbH, Zurich, Switzerland
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,39 +23,9 @@ package com.cloudbroker.platform.api.data;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 public class Software extends Base {
-	@XStreamAlias("core-runtime-fee")
-	private double coreRuntimeFee;
-
-	@XStreamAlias("runtime-fee")
-	private double runtimeFee;
-	
 	@XStreamAlias("use-nfs")
 	private boolean useNFS;
 	
-	@XStreamAlias("job-fee")
-	private double jobFee;
-
-	@XStreamAlias("user-fee")
-	private double userFee;
-
-	@XStreamAlias("organization-fee")
-	private double organizationFee;
-
-	@XStreamAlias("temp-core-runtime-fee")
-	private double tempCoreRuntimeFee;
-
-	@XStreamAlias("temp-runtime-fee")
-	private double tempRuntimeFee;
-
-	@XStreamAlias("temp-job-fee")
-	private double tempJobFee;
-
-	@XStreamAlias("temp-user-fee")
-	private double tempUserFee;
-
-	@XStreamAlias("temp-organization-fee")
-	private double tempOrganizationFee;
-
 	private String version = "";
 	private String product = "";
 	private String website = "";
@@ -66,30 +36,6 @@ public class Software extends Base {
 	private String status = "";
 	private String description = "";
 
-	@XStreamAlias("included-jobs")
-	private String includedJobs;
-
-	@XStreamAlias("included-users")
-	private String includedUsers;
-
-	@XStreamAlias("included-runtime")
-	private String includedRuntime;
-
-	@XStreamAlias("included-core-runtime")
-	private String includedCoreRuntime;
-
-	@XStreamAlias("maximum-jobs")
-	private String maximumJobs;
-
-	@XStreamAlias("maximum-users")
-	private String maximumUsers;
-
-	@XStreamAlias("maximum-runtime")
-	private String maximumRuntime;
-
-	@XStreamAlias("maximum-core-runtime")
-	private String maximumCoreRuntime;
-
 	@XStreamAlias("organization-id")
 	private String organizationID;
 
@@ -99,86 +45,6 @@ public class Software extends Base {
 
 	public void setOrganizationID(String organizationID) {
 		this.organizationID = organizationID;
-	}
-
-	public double getCoreRuntimeFee() {
-		return coreRuntimeFee;
-	}
-
-	public void setCoreRuntimeFee(double coreRuntimeFee) {
-		this.coreRuntimeFee = coreRuntimeFee;
-	}
-
-	public double getRuntimeFee() {
-		return runtimeFee;
-	}
-
-	public void setRuntimeFee(double runtimeFee) {
-		this.runtimeFee = runtimeFee;
-	}
-
-	public double getJobFee() {
-		return jobFee;
-	}
-
-	public void setJobFee(double jobFee) {
-		this.jobFee = jobFee;
-	}
-
-	public double getUserFee() {
-		return userFee;
-	}
-
-	public void setUserFee(double userFee) {
-		this.userFee = userFee;
-	}
-
-	public double getOrganizationFee() {
-		return organizationFee;
-	}
-
-	public void setOrganizationFee(double organizationFee) {
-		this.organizationFee = organizationFee;
-	}
-
-	public double getTempCoreRuntimeFee() {
-		return tempCoreRuntimeFee;
-	}
-
-	public void setTempCoreRuntimeFee(double tempCoreRuntimeFee) {
-		this.tempCoreRuntimeFee = tempCoreRuntimeFee;
-	}
-
-	public double getTempRuntimeFee() {
-		return tempRuntimeFee;
-	}
-
-	public void setTempRuntimeFee(double tempRuntimeFee) {
-		this.tempRuntimeFee = tempRuntimeFee;
-	}
-
-	public double getTempJobFee() {
-		return tempJobFee;
-	}
-
-	public void setTempJobFee(double tempJobFee) {
-		this.tempJobFee = tempJobFee;
-	}
-
-	public double getTempUserFee() {
-		return tempUserFee;
-	}
-
-	public void setTempUserFee(double tempUserFee) {
-		this.tempUserFee = tempUserFee;
-	}
-
-	public double getTempOrganizationFee() {
-		return tempOrganizationFee;
-	}
-
-	public void setTempOrganizationFee(double tempOrganizationFee) {
-		this.tempOrganizationFee = tempOrganizationFee;
 	}
 
 	public String getVersion() {

@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 CloudBroker GmbH, Zurich, Switzerland
+ * Copyright 2015 CloudBroker GmbH, Zurich, Switzerland
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,10 +62,15 @@ import com.cloudbroker.platform.api.data.DataType;
 import com.cloudbroker.platform.api.data.Executable;
 import com.cloudbroker.platform.api.data.Fee;
 import com.cloudbroker.platform.api.data.InstanceType;
+import com.cloudbroker.platform.api.data.InstanceTypePrice;
 import com.cloudbroker.platform.api.data.Job;
 import com.cloudbroker.platform.api.data.JobStatusTime;
+import com.cloudbroker.platform.api.data.PlatformPrice;
 import com.cloudbroker.platform.api.data.Region;
 import com.cloudbroker.platform.api.data.Resource;
+import com.cloudbroker.platform.api.data.ResourcePrice;
+import com.cloudbroker.platform.api.data.SoftwarePrice;
+import com.cloudbroker.platform.api.data.StoragePrice;
 import com.cloudbroker.platform.api.data.Tag;
 import com.cloudbroker.platform.api.exceptions.CloudbrokerPlatformAPIException;
 
@@ -576,6 +581,26 @@ public class Core {
 			String password) {
 		String userpass = username + ":" + password;
 		return "Basic " + new String(new Base64().encode(userpass.getBytes()));
+	}
+
+	public static PlatformPrice getPlatformPrice(HttpMethodExecutor httpMethodExecutor) throws IOException {
+		return XMLConverter.deserialize(PlatformPrice.class, new String(httpMethodExecutor.get("/platform_prices.xml")));
+	}
+
+	public static SoftwarePrice getSoftwarePrice(String softwareID, HttpMethodExecutor httpMethodExecutor) throws IOException {
+		return XMLConverter.deserialize(SoftwarePrice.class, new String(httpMethodExecutor.get("/softwares/" + softwareID+ "/price.xml")));		
+	}
+
+	public static ResourcePrice getResourcePrice(String resourceID, HttpMethodExecutor httpMethodExecutor) throws IOException {
+		return XMLConverter.deserialize(ResourcePrice.class, new String(httpMethodExecutor.get("/resources/" + resourceID+ "/price.xml")));		
+	}
+
+	public static InstanceTypePrice getInstanceTypePrice(String instanceTypeID, HttpMethodExecutor httpMethodExecutor) throws IOException {
+		return XMLConverter.deserialize(InstanceTypePrice.class, new String(httpMethodExecutor.get("/instance_types/" + instanceTypeID+ "/price.xml")));		
+	}
+
+	public static StoragePrice getStoragePrice(String storageID, HttpMethodExecutor httpMethodExecutor) throws IOException {
+		return XMLConverter.deserialize(StoragePrice.class, new String(httpMethodExecutor.get("/storages/" + storageID + "/price.xml")));		
 	}
 
 }
