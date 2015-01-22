@@ -5,3 +5,13 @@
 .classpath
 
 src/Tester.java
+
+*.class
+
+dist/CloudbrokerAPI-1.2.1d.jar
+
+dist/CloudbrokerAPI-1.2.1d.zip
+
+*.jar
+
+*.zip
