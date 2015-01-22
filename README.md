@@ -43,7 +43,7 @@ CloudBroker welcomes rational contributions as well as bug/issue reports from ev
 
 ## Licensing
 
-Copyright 2013 CloudBroker GmbH, Zurich, Switzerland
+Copyright 2015 CloudBroker GmbH, Zurich, Switzerland
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

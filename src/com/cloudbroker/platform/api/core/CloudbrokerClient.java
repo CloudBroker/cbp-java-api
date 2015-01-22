@@ -73,7 +73,12 @@ public class CloudbrokerClient {
 	public static final int DOWNLOAD_PER_GB_COST = 7;
 	public static final int GB_PER_MONTH_COST = 8;
 	public static final int GB_PER_JOB = 9;
-
+	public static final int LICENSE_RUNTIME_FEE = 21;
+	public static final int LICENSE_CORE_RUNTIME_FEE = 22;
+	public static final int INSTANCE_RUNTIME_FEE = 23;
+	public static final int JOB_SUBMISSION_FEE = 24;
+	public static final int GB_OUTPUT_DATA = 25;
+	
 	private HttpMethodExecutor getHttpMethodExecutor() {
 		if (httpMethodExecutor == null) {
 			try {
@@ -1027,6 +1032,8 @@ public class CloudbrokerClient {
 	 * @return hash, where key (String) is cost description and value (double)
 	 *         is the cost itself
 	 * @throws IOException
+	 * 
+	 * @deprecated file size is not needed anymore
 	 */
 	public HashMap<Integer, Double> getEstimatedCostForJob(Software software,
 			Resource resource, Region region, InstanceType instanceType,
@@ -1054,16 +1061,63 @@ public class CloudbrokerClient {
 	 * @return hash, where key (String) is cost description and value (double)
 	 *         is the cost itself
 	 * @throws IOException
+	 * @deprecated file size is not needed anymore
 	 */
 	public HashMap<Integer, Double> getEstimatedCostForJob(String softwareId,
 			String resourceId, String regionId, String instanceTypeId,
 			double filesSize, int nodes) throws IOException {
+		return getEstimatedCostForJob(softwareId, resourceId, regionId, instanceTypeId, nodes);
+	}
+	
+	/**
+	 * Shows the estimated job cost to the user
+	 * 
+	 * @param software
+	 *            - software used for the job
+	 * @param resource
+	 *            - resource used for the job
+	 * @param region
+	 *            - region used for the job
+	 * @param instanceType
+	 *            - instance type used for the job
+	 * @param nodes
+	 *            - number of instances on which the job will run
+	 * @return hash, where key (String) is cost description and value (double)
+	 *         is the cost itself
+	 * @throws IOException
+	 */
+	public HashMap<Integer, Double> getEstimatedCostForJob(Software software,
+			Resource resource, Region region, InstanceType instanceType,
+			int nodes) throws IOException {
+		return getEstimatedCostForJob(software.getID(), resource.getID(),
+				region.getID(), instanceType.getID(), nodes);
+	}
+
+	/**
+	 * Shows the estimated job cost to the user
+	 * 
+	 * @param softwareId
+	 *            - software ID used for the job
+	 * @param resourceId
+	 *            - resource ID used for the job
+	 * @param regionId
+	 *            - region ID used for the job
+	 * @param instanceTypeId
+	 *            - instance type ID used for the job
+	 * @param nodes
+	 *            - number of instances on which the job will run
+	 * @return hash, where key (String) is cost description and value (double)
+	 *         is the cost itself
+	 * @throws IOException
+	 */
+	public HashMap<Integer, Double> getEstimatedCostForJob(String softwareId,
+			String resourceId, String regionId, String instanceTypeId,
+			int nodes) throws IOException {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("software", softwareId);
 		params.put("resource", resourceId);
 		params.put("region", regionId);
 		params.put("instance_type", instanceTypeId);
-		params.put("data_file_size", String.valueOf(filesSize));
 		params.put("nodes", String.valueOf(nodes));
 		return Core.estimatesFor(new Job(), params, getHttpMethodExecutor());
 	}
@@ -1089,13 +1143,11 @@ public class CloudbrokerClient {
 	 * @return hash, where key (String) is cost description and value (double)
 	 *         is the cost itself
 	 * @throws IOException
+	 * @deprecated DataFiles has no direct costs
 	 */
 	public HashMap<Integer, Double> getEstimatedCostForDataFile(String jobId)
 			throws IOException {
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("job", jobId);
-		return Core.estimatesFor(new DataFile(), params,
-				getHttpMethodExecutor());
+		return null;
 	}
 
 	/**
