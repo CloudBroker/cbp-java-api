@@ -924,6 +924,20 @@ public class CloudbrokerClient {
 			ClassNotFoundException {
 		return Core.getJobDataFiles(jobID, getHttpMethodExecutor());
 	}
+	
+	/**
+	 * Returns a list of instances where a job is/was running
+	 * 
+	 * @param jobID
+	 *            - job ID, which instances should be shown
+	 * @return List of instances
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	public List<Instance> getJobInstances(String jobID) throws IOException,
+			ClassNotFoundException {
+		return Core.getJobInstances(jobID, getHttpMethodExecutor());
+	}
 
 	/**
 	 * Lists activity logs for the given job

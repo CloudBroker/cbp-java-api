@@ -119,6 +119,14 @@ public class Core {
 				+ "/data_files.xml");
 		return XMLConverter.deserializeList(DataFile.class, xml);
 	}
+	
+	public static List<Instance> getJobInstances(String jodID,
+			HttpMethodExecutor httpMethodExecutor) throws IOException,
+			ClassNotFoundException {
+		byte[] xml = httpMethodExecutor.get("/jobs/" + jodID
+				+ "/instances.xml");
+		return XMLConverter.deserializeList(Instance.class, xml);
+	}
 
 	public static List<ActivityLog> getJobLogs(String jodID,
 			HttpMethodExecutor httpMethodExecutor) throws IOException,
