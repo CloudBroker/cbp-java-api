@@ -54,24 +54,7 @@ import org.xml.sax.InputSource;
 
 import com.cloudbroker.platform.api.connector.HttpMethodExecutor;
 import com.cloudbroker.platform.api.converter.XMLConverter;
-import com.cloudbroker.platform.api.data.ActivityLog;
-import com.cloudbroker.platform.api.data.Base;
-import com.cloudbroker.platform.api.data.CopyType;
-import com.cloudbroker.platform.api.data.DataFile;
-import com.cloudbroker.platform.api.data.DataType;
-import com.cloudbroker.platform.api.data.Executable;
-import com.cloudbroker.platform.api.data.Fee;
-import com.cloudbroker.platform.api.data.InstanceType;
-import com.cloudbroker.platform.api.data.InstanceTypePrice;
-import com.cloudbroker.platform.api.data.Job;
-import com.cloudbroker.platform.api.data.JobStatusTime;
-import com.cloudbroker.platform.api.data.PlatformPrice;
-import com.cloudbroker.platform.api.data.Region;
-import com.cloudbroker.platform.api.data.Resource;
-import com.cloudbroker.platform.api.data.ResourcePrice;
-import com.cloudbroker.platform.api.data.SoftwarePrice;
-import com.cloudbroker.platform.api.data.StoragePrice;
-import com.cloudbroker.platform.api.data.Tag;
+import com.cloudbroker.platform.api.data.*;
 import com.cloudbroker.platform.api.exceptions.CloudbrokerPlatformAPIException;
 
 public class Core {
@@ -321,6 +304,29 @@ public class Core {
 			throws IOException {
 		httpMethodExecutor.put("", getUrl(job.getClass()) + "/" + job.getID()
 				+ "/restart.xml", 201);
+	}
+	
+	public static void innerFileTransfer(Instance inst, Job sourceJob, Job targetJob, String sourcePath, String targetPath, InnerTransferType transferType, HttpMethodExecutor httpMethodExecutor) throws IOException {
+		StringBuffer params = new StringBuffer();
+		params.append("<instance>");
+		if (sourceJob != null) {
+			params.append("<source_type>job_folder</source_type><source_id>").append(sourceJob.getID()).append("</source_id>");
+		} else {
+			params.append("<source_type>instance_data_folder</source_type>");
+		}
+		if (targetJob != null) {
+			params.append("<target_type>job_folder</target_type><target_id>").append(targetJob.getID()).append("</target_id>");
+		} else {
+			params.append("<target_type>instance_data_folder</target_type>");
+		}
+		params.append("<source_path>").append(sourcePath).append("</source_path>");
+		params.append("<target_path>").append(targetPath).append("</target_path>");
+		params.append("<operation_type>").append(transferType.toString().toLowerCase()).append("</operation_type>");
+		params.append("</instance>");
+
+		httpMethodExecutor.put(
+				params.toString(),
+				getUrl(inst.getClass()) + "/" + inst.getID() + "/inner_file_transfer.xml", 200);
 	}
 
 	private static void downloadFile(URL url, String to,

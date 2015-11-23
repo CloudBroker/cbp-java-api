@@ -11,7 +11,7 @@
     <property name="doc.dir" location="doc"/>
     <property name="dist.dir" location="dist"/>
     <property name="api.name" value="CloudbrokerAPI"/>
-    <property name="api.version" value="2.0.0a"/>
+    <property name="api.version" value="2.1.0a"/>
     <property name="api.jar" value="${api.name}-${api.version}.jar"/>
     <property name="api.zip" value="${api.name}-${api.version}.zip"/>
 

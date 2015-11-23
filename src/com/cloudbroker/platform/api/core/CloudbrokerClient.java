@@ -26,30 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.cloudbroker.platform.api.connector.HttpMethodExecutor;
-import com.cloudbroker.platform.api.data.ActivityLog;
-import com.cloudbroker.platform.api.data.Base;
-import com.cloudbroker.platform.api.data.BillingItem;
-import com.cloudbroker.platform.api.data.CopyType;
-import com.cloudbroker.platform.api.data.DataFile;
-import com.cloudbroker.platform.api.data.DataType;
-import com.cloudbroker.platform.api.data.Executable;
-import com.cloudbroker.platform.api.data.Fee;
-import com.cloudbroker.platform.api.data.InstanceType;
-import com.cloudbroker.platform.api.data.InstanceTypePrice;
-import com.cloudbroker.platform.api.data.Invoice;
-import com.cloudbroker.platform.api.data.Job;
-import com.cloudbroker.platform.api.data.JobStatusTime;
-import com.cloudbroker.platform.api.data.Organization;
-import com.cloudbroker.platform.api.data.Payment;
-import com.cloudbroker.platform.api.data.PlatformPrice;
-import com.cloudbroker.platform.api.data.Region;
-import com.cloudbroker.platform.api.data.Resource;
-import com.cloudbroker.platform.api.data.ResourcePrice;
-import com.cloudbroker.platform.api.data.Software;
-import com.cloudbroker.platform.api.data.SoftwarePrice;
-import com.cloudbroker.platform.api.data.StoragePrice;
-import com.cloudbroker.platform.api.data.Tag;
-import com.cloudbroker.platform.api.data.User;
+import com.cloudbroker.platform.api.data.*;
 import com.cloudbroker.platform.api.exceptions.CloudbrokerPlatformAPIException;
 
 /**
@@ -825,6 +802,21 @@ public class CloudbrokerClient {
 	public void stopJob(Job job) throws IOException {
 		Core.stopJob(job, getHttpMethodExecutor());
 
+	}
+	
+	/**
+	 * Provides the transfer of files inside a running instance.
+	 *  
+	 * @param inst - instance on which the files are to be transferred
+	 * @param sourceJob - job, which folder is to be taken as a source folder. Leave empty to use instance data directory instead
+	 * @param targetJob - job, which folder is to be taken as a target folder. Leave empty to use instance data directory instead
+	 * @param sourcePath - relative path to a source file/folder (full path is formed as sourceJob folder + sourcePath)
+	 * @param targetPath - relative path to a target file/folder (full path is formed as targetJob folder + targetPath)
+	 * @param transferType - copy file, move file or link file (ln -s)
+	 * @throws IOException 
+	 */
+	public void innerFileTransfer(Instance inst, Job sourceJob, Job targetJob, String sourcePath, String targetPath, InnerTransferType transferType) throws IOException {
+		Core.innerFileTransfer(inst, sourceJob, targetJob, sourcePath, targetPath, transferType, getHttpMethodExecutor());
 	}
 
 	/**
