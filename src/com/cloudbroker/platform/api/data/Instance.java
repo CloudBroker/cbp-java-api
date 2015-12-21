@@ -28,8 +28,28 @@ public class Instance extends Base{
 		return "/instances";
 	}
 	
+	@XStreamAlias("software-id")
+	private String softwareID = "";
+
+	@XStreamAlias("deployment-id")
+	private String deploymentID = "";
+
+	@XStreamAlias("region-id")
+	private String regionID = "";
+	
+	@XStreamAlias("instance-type-id")
+	private String instanceTypeID = "";
+	
+	@XStreamAlias("opened-port")
+	private String openedPort = "0";
+	
 	@XStreamAlias("external-ip-address")
 	private String externalIP;
+
+	@XStreamAlias("disable-autostop")
+	private boolean disableAutostop = false;
+
+	private boolean isolated = false;
 
 	public String getExternalIP() {
 		return externalIP;
@@ -37,6 +57,62 @@ public class Instance extends Base{
 
 	public void setExternalIP(String externalIP) {
 		this.externalIP = externalIP;
+	}
+
+	public String getSoftwareID() {
+		return softwareID;
+	}
+
+	public void setSoftwareID(String softwareID) {
+		this.softwareID = softwareID;
+	}
+
+	public String getDeploymentID() {
+		return deploymentID;
+	}
+
+	public void setDeploymentID(String deploymentID) {
+		this.deploymentID = deploymentID;
+	}
+
+	public String getRegionID() {
+		return regionID;
+	}
+
+	public void setRegionID(String regionID) {
+		this.regionID = regionID;
+	}
+
+	public String getInstanceTypeID() {
+		return instanceTypeID;
+	}
+
+	public void setInstanceTypeID(String instanceTypeID) {
+		this.instanceTypeID = instanceTypeID;
+	}
+
+	public boolean isDisableAutostop() {
+		return disableAutostop;
+	}
+
+	public void setDisableAutostop(boolean disableAutostop) {
+		this.disableAutostop = disableAutostop;
+	}
+
+	public boolean isIsolated() {
+		return isolated;
+	}
+
+	public void setIsolated(boolean isolated) {
+		this.isolated = isolated;
+	}
+
+	public String getOpenedPort() {
+		return openedPort;
+	}
+
+	public void setOpenedPort(String openedPort) {
+		this.openedPort = openedPort;
 	}
 	
 }
