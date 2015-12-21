@@ -116,6 +116,9 @@ public class Job extends Base{
 	@XStreamAlias("storage-id")
 	private String storageID = "";
 	
+	@XStreamAlias("requested-instance-id")
+	private String requestedInstanceID = "";
+	
 	@XStreamAlias("last-load-files")
 	private Date lastLoadFiles;
 	
@@ -388,5 +391,13 @@ public class Job extends Base{
 	
 	public void setJobID(String jobID) {
 		this.id = jobID;
+	}
+	
+	public String getRequestedInstanceID() {
+		return requestedInstanceID;
+	}
+
+	public void setRequestedInstanceID(String requestedInstanceID) {
+		this.requestedInstanceID = requestedInstanceID;
 	}
 }
