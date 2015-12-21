@@ -301,6 +301,12 @@ public class Core {
 		httpMethodExecutor.put("", getUrl(job.getClass()) + "/" + job.getID()
 				+ "/stop.xml", 200);
 	}
+	
+	public static void stopInstance(Instance instance, HttpMethodExecutor httpMethodExecutor)
+			throws IOException {
+		httpMethodExecutor.put("", getUrl(instance.getClass()) + "/" + instance.getID()
+				+ "/stop.xml", 200);
+	}
 
 	public static void deleteJobFiles(Job job,
 			HttpMethodExecutor httpMethodExecutor) throws IOException {

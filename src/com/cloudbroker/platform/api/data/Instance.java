@@ -45,6 +45,8 @@ public class Instance extends Base{
 	
 	@XStreamAlias("external-ip-address")
 	private String externalIP;
+	
+	private String status = "";
 
 	@XStreamAlias("disable-autostop")
 	private boolean disableAutostop = false;
@@ -113,6 +115,10 @@ public class Instance extends Base{
 
 	public void setOpenedPort(String openedPort) {
 		this.openedPort = openedPort;
+	}
+
+	public String getStatus() {
+		return status;
 	}
 	
 }

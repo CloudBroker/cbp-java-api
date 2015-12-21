@@ -805,6 +805,17 @@ public class CloudbrokerClient {
 	}
 	
 	/**
+	 * Stops the given instance
+	 * 
+	 * @param instance
+	 *            - instance to be stopped
+	 * @throws IOException
+	 */
+	public void stopInstance(Instance instance) throws IOException {
+		Core.stopInstance(instance, getHttpMethodExecutor());
+
+	}
+	/**
 	 * Provides the transfer of files inside a running instance.
 	 *  
 	 * @param inst - instance on which the files are to be transferred
