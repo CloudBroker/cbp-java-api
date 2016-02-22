@@ -34,6 +34,7 @@ import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -100,6 +101,13 @@ public class Core {
 			HttpMethodExecutor httpMethodExecutor) throws IOException,
 			ClassNotFoundException {
 		byte[] xml = httpMethodExecutor.get(getUrl(T) + ".xml");
+		return XMLConverter.deserializeList(T, xml);
+	}
+	
+	public static <T extends Base> List<T> list(Class<T> T, int page, int perPage,
+			HttpMethodExecutor httpMethodExecutor) throws IOException,
+			ClassNotFoundException {
+		byte[] xml = httpMethodExecutor.get(getUrl(T) + ".xml?page=" + page + "&per_page=" + perPage);
 		return XMLConverter.deserializeList(T, xml);
 	}
 
@@ -621,6 +629,29 @@ public class Core {
 
 	public static StoragePrice getStoragePrice(String storageID, HttpMethodExecutor httpMethodExecutor) throws IOException {
 		return XMLConverter.deserialize(StoragePrice.class, new String(httpMethodExecutor.get("/storages/" + storageID + "/price.xml")));		
+	}
+
+	public static List<Job> filteredJobsList(
+			Map<String, String> params, int page,
+			int perPage, HttpMethodExecutor httpMethodExecutor) throws IOException, ClassNotFoundException {
+		StringBuffer paramsString = new StringBuffer();
+		if (page > 0) {
+			paramsString.append("page=").append(page).append("&per_page=").append(perPage);
+		}
+		if (params.containsKey("userId")) {
+			paramsString.append("&job[user_filter]=").append(params.get("userId"));
+		}		
+		if (params.containsKey("executableId")) {
+			paramsString.append("&job[executable_filter]=").append(params.get("executableId"));
+		}		
+		if (params.containsKey("instanceTypeId")) {
+			paramsString.append("&job[instance_type_filter]=").append(params.get("instanceTypeId"));
+		}		
+		if (params.containsKey("status")) {
+			paramsString.append("&job[status_filter]=").append(params.get("status"));
+		}
+		byte[] xml = httpMethodExecutor.get(getUrl(Job.class) + ".xml?" + paramsString.toString());
+		return XMLConverter.deserializeList(Job.class, xml);
 	}
 
 }

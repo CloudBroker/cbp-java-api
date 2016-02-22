@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.cloudbroker.platform.api.connector.HttpMethodExecutor;
 import com.cloudbroker.platform.api.data.*;
@@ -182,6 +183,60 @@ public class CloudbrokerClient {
 	public <T extends Base> List<T> list(Class<T> T) throws IOException,
 			ClassNotFoundException {
 		return Core.list(T, getHttpMethodExecutor());
+	}
+	
+	/**
+	 * Used to get paginated lists of objects 
+	 * 
+	 * @param T
+	 *            - model class, e.g. DataFile.class
+	 * @param pageNumber - page number you need, please use 1 for the first page         
+	 * @param itemsPerPage - number of records per page         
+	 * @return list of requested objects or empty list if not found
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	public <T extends Base> List<T> list(Class<T> T, int pageNumber, int itemsPerPage) throws IOException,
+			ClassNotFoundException {
+		return Core.list(T, pageNumber, itemsPerPage, getHttpMethodExecutor());
+	}
+	
+	/**
+	 * Used to get paged filtered lists of jobs 
+	 * 
+	 * @param filterParameters
+	 *            - hash paramterer:value, the following parameters are supported:
+	 *            / userId
+	 *            / executableId
+	 *            / instanceTypeId
+	 *            / status
+	 * @param pageNumber - page number you need, please use 1 for the first page         
+	 * @param itemsPerPage - number of records per page             
+	 * @return list of filtered jobs
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	public List<Job> filteredJobsList(Map<String, String> filterParameters, int pageNumber, int itemsPerPage) throws IOException,
+			ClassNotFoundException {
+		return Core.filteredJobsList(filterParameters, pageNumber, itemsPerPage, getHttpMethodExecutor());
+	}
+	
+	/**
+	 * Used to get filtered lists of jobs 
+	 * 
+	 * @param filterParameters
+	 *            - hash paramterer:value, the following parameters are supported:
+	 *            / userId
+	 *            / executableId
+	 *            / instanceTypeId
+	 *            / status
+	 * @return list of filtered jobs
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	public List<Job> filteredJobsList(Map<String, String> filterParameters) throws IOException,
+			ClassNotFoundException {
+		return this.filteredJobsList(filterParameters, 0, 0);
 	}
 
 	/**
